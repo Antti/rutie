@@ -41,6 +41,8 @@ pub use class::traits::object::Object;
 pub use class::traits::verified_object::VerifiedObject;
 pub use class::traits::try_convert::TryConvert;
 
+pub use typed_data::WrappableData;
+
 pub use helpers::codepoint_iterator::CodepointIterator;
 
 #[cfg(test)]

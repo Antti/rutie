@@ -1,9 +1,10 @@
 use rubysys::{class, typed_data};
 
 use binding::symbol;
-use typed_data::DataTypeWrapper;
+use typed_data::{DataTypeWrapper, WrappableData};
 use types::{c_void, Callback, CallbackPtr, Value};
 use util;
+use GC;
 
 use Object;
 
@@ -101,10 +102,12 @@ pub fn define_singleton_method<I: Object, O: Object>(
     }
 }
 
-pub fn wrap_data<T>(klass: Value, data: T, wrapper: &DataTypeWrapper<T>) -> Value {
+pub fn wrap_data<T>(klass: Value, data: T, wrapper: &DataTypeWrapper<T>) -> Value where T: WrappableData {
+    let data_size = data.data_size();
     let data = Box::into_raw(Box::new(data)) as *mut c_void;
-
-    unsafe { typed_data::rb_data_typed_object_wrap(klass, data, wrapper.data_type()) }
+    let value = unsafe { typed_data::rb_data_typed_object_wrap(klass, data, wrapper.data_type()) };
+    GC::adjust_memory_usage(data_size as isize);
+    value
 }
 
 pub fn get_data<T>(object: Value, wrapper: &DataTypeWrapper<T>) -> &mut T {

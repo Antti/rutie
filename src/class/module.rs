@@ -2,7 +2,7 @@ use std::convert::From;
 
 use binding::{module, class};
 use binding::global::rb_cObject;
-use typed_data::DataTypeWrapper;
+use typed_data::{DataTypeWrapper, WrappableData};
 use types::{Value, ValueType, Callback};
 
 use {AnyObject, Array, Object, Class, VerifiedObject};
@@ -721,7 +721,7 @@ impl Module {
     /// server.host == "127.0.0.1"
     /// server.port == 3000
     /// ```
-    pub fn wrap_data<T, O: Object>(&self, data: T, wrapper: &DataTypeWrapper<T>) -> O {
+    pub fn wrap_data<T, O: Object>(&self, data: T, wrapper: &DataTypeWrapper<T>) -> O where T: WrappableData {
         let value = class::wrap_data(self.value(), data, wrapper);
 
         O::from(value)

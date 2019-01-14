@@ -698,7 +698,7 @@ macro_rules! wrappable_struct {
             pub static ref $static_name: $wrapper<$struct_name> = $wrapper::new();
         }
 
-        impl<T> $wrapper<T> {
+        impl<T> $wrapper<T> where T: $crate::typed_data::WrappableData {
             fn new() -> $wrapper<T> {
                 let name = concat!("Rutie/", stringify!($struct_name));
                 let name = $crate::util::str_to_cstring(name);
