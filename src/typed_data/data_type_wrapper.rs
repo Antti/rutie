@@ -5,7 +5,7 @@ pub trait DataTypeWrapper<T> {
 }
 
 pub trait WrappableData {
-    fn data_size(&self) -> usize {
-        0
+    fn data_size(&self) -> Option<usize> {
+        None
     }
 }

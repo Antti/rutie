@@ -106,7 +106,9 @@ pub fn wrap_data<T>(klass: Value, data: T, wrapper: &DataTypeWrapper<T>) -> Valu
     let data_size = data.data_size();
     let data = Box::into_raw(Box::new(data)) as *mut c_void;
     let value = unsafe { typed_data::rb_data_typed_object_wrap(klass, data, wrapper.data_type()) };
-    GC::adjust_memory_usage(data_size as isize);
+    if let Some(bytes) = data_size {
+        GC::adjust_memory_usage(bytes as isize);
+    }
     value
 }
 
